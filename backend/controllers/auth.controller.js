@@ -6,6 +6,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 export const register = asyncHandler(async (req , res) => {
     const {name , email , password} = req.body;
     const hashed = await hashPassword(password);
+    if(await User.findByEmail(email)){
+        res.status(409).json({message:"Email already exists"});
+    }
     const user = await User.create(name , email , hashed);
     res.json({message:"Registered successfully" , user});
 })

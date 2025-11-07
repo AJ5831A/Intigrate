@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from './routes/auth.route.js';
 import projectRoutes from './routes/project.route.js';
+import memberRoutes from './routes/member.route.js';
 import { pool } from "./db/db.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -29,5 +30,6 @@ pool.query("SELECT 1", (err, res) => {
 
 app.use('/auth' , authRoutes) 
 app.use('/project' , projectRoutes) 
+app.use('/project' , memberRoutes)
 
 app.listen(8080, () => console.log("Backend running on localhost:8080"));

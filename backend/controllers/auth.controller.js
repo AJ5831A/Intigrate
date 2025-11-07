@@ -7,7 +7,7 @@ export const register = asyncHandler(async (req , res) => {
     const {name , email , password} = req.body;
     const hashed = await hashPassword(password);
     if(await User.findByEmail(email)){
-        res.status(409).json({message:"Email already exists"});
+        return res.status(409).json({message:"Email already exists"});
     }
     const user = await User.create(name , email , hashed);
     res.json({message:"Registered successfully" , user});
@@ -18,17 +18,17 @@ export const login = asyncHandler(async (req , res) =>{
 
     const user = await User.findByEmail(email);
     if(!user){
-        res.status(404).json({message:"User not found"});
+        return res.status(404).json({message:"User not found"});
     }
 
     const match = await comparePassword(password , user.password_hash);
     if(!match){
-        res.status(401).json({message:"Invalid credentials"});
+        return res.status(401).json({message:"Invalid credentials"});
     }
 
     const token = createToken({userId:user.id , email:user.email});
 
-    res.cookie("token" , token , {httpOnly : true, maxAge: 1000*60*60*24*15});
+    res.cookie("token" , token);
     res.json({message:"Login successful" , user});
 })
 
